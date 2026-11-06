@@ -1,0 +1,615 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Simulatore · Impresa edile e azienda agricola</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Sans+Condensed:wght@500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#F5F6F4; --panel:#FFFFFF; --ink:#1E272B; --ink-2:#4B5A60; --rule:#D5DBD7; --field:#EEF1EE;
+  --edile:#A0732B; --edile-soft:#F1E6D2; --agri:#557A52; --agri-soft:#DFEADD; --glamp:#4C6A86;
+  --warn:#9C3D2E; --warn-soft:#F5DFD9; --ok:#3F6E43; --ok-soft:#DDEBDD; --focus:#2F6FB0;
+  color-scheme:light;
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --paper:#151A1C; --panel:#1D2427; --ink:#E6EBE8; --ink-2:#A6B3B0; --rule:#334046; --field:#263034;
+    --edile:#D3A458; --edile-soft:#3A2F1E; --agri:#8DB688; --agri-soft:#22332323; --glamp:#86A6C4;
+    --warn:#E58A79; --warn-soft:#3B2420; --ok:#8DBF8F; --ok-soft:#1F3221; --focus:#7FB2E5;
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --paper:#151A1C; --panel:#1D2427; --ink:#E6EBE8; --ink-2:#A6B3B0; --rule:#334046; --field:#263034;
+  --edile:#D3A458; --edile-soft:#3A2F1E; --agri:#8DB688; --agri-soft:#223323; --glamp:#86A6C4;
+  --warn:#E58A79; --warn-soft:#3B2420; --ok:#8DBF8F; --ok-soft:#1F3221; --focus:#7FB2E5;
+  color-scheme:dark;
+}
+*,*::before,*::after{box-sizing:inherit}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--paper);color:var(--ink);font:400 15px/1.5 "IBM Plex Sans",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;font-variant-numeric:tabular-nums}
+.wrap{max-width:1240px;margin:0 auto;padding:28px 20px 60px}
+h1,h2,h3{font-family:"IBM Plex Sans Condensed","IBM Plex Sans",system-ui,sans-serif;font-weight:600;line-height:1.15;margin:0}
+h1{font-size:clamp(26px,4vw,38px);letter-spacing:-.01em}
+h2{font-size:22px;margin-bottom:6px}
+h3{font-size:16px}
+p{margin:0}
+.lead{color:var(--ink-2);max-width:72ch;margin-top:8px}
+header.top{display:grid;gap:22px;padding-bottom:22px;border-bottom:2px solid var(--ink)}
+
+/* Barra del mese tipo */
+.month{display:grid;gap:10px}
+.month-figs{display:flex;flex-wrap:wrap;gap:28px;align-items:baseline}
+.fig .v{font-family:"IBM Plex Sans Condensed",sans-serif;font-size:clamp(34px,6vw,56px);font-weight:600;line-height:1}
+.fig .l{color:var(--ink-2);font-size:13px}
+.fig.ed .v{color:var(--edile)} .fig.ag .v{color:var(--agri)}
+.bar{position:relative;height:34px;background:var(--field);border:1px solid var(--rule);overflow:visible}
+.bar .seg{position:absolute;top:0;bottom:0;transition:width .35s ease,left .35s ease}
+.bar .seg.ed{background:var(--edile)} .bar .seg.ag{background:var(--agri)}
+.bar .target{position:absolute;top:-8px;bottom:-8px;width:0;border-left:2px dashed var(--ink)}
+.bar .target span{position:absolute;top:-22px;left:6px;white-space:nowrap;font-size:12px;color:var(--ink-2)}
+.status{font-weight:600}
+.status.ok{color:var(--ok)} .status.no{color:var(--warn)}
+@media (prefers-reduced-motion:reduce){.bar .seg{transition:none}}
+
+/* Layout calcolatore */
+.calc{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,1fr);gap:28px;margin-top:30px;align-items:start}
+@media (max-width:960px){.calc{grid-template-columns:minmax(0,1fr)}}
+.inputs{display:grid;gap:14px}
+details.grp{background:var(--panel);border:1px solid var(--rule);border-left:4px solid var(--c,var(--ink-2))}
+details.grp[data-c="edile"]{--c:var(--edile)} details.grp[data-c="agri"]{--c:var(--agri)} details.grp[data-c="glamp"]{--c:var(--glamp)}
+details.grp>summary{cursor:pointer;padding:12px 16px;font-weight:600;list-style:none;display:flex;justify-content:space-between;gap:12px}
+details.grp>summary::-webkit-details-marker{display:none}
+details.grp>summary::after{content:"+";color:var(--ink-2);font-weight:400}
+details.grp[open]>summary::after{content:"–"}
+.fields{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:12px 16px;padding:4px 16px 16px}
+.f{display:grid;gap:4px}
+.f label{font-size:13px;color:var(--ink-2)}
+.f .in{display:flex;align-items:center;background:var(--field);border:1px solid var(--rule)}
+.f input[type=number],.f select{width:100%;border:0;background:transparent;color:var(--ink);font:inherit;padding:7px 9px;min-width:0}
+.f .u{padding:0 9px;color:var(--ink-2);font-size:13px;white-space:nowrap}
+.f.chk{display:flex;align-items:center;gap:8px;grid-column:1/-1}
+.f.chk label{color:var(--ink);font-size:14px}
+input:focus-visible,select:focus-visible,button:focus-visible,summary:focus-visible{outline:2px solid var(--focus);outline-offset:2px}
+.hint{font-size:13px;color:var(--ink-2);padding:0 16px 14px;max-width:70ch}
+.hidden{display:none!important}
+
+.results{position:sticky;top:calc(env(safe-area-inset-top,0px) + 12px);display:grid;gap:14px}
+@media (max-width:960px){.results{position:static}}
+.card{background:var(--panel);border:1px solid var(--rule);padding:16px}
+.card h3{margin-bottom:10px}
+table.kv{width:100%;border-collapse:collapse;font-size:14px}
+table.kv td{padding:5px 0;border-bottom:1px solid var(--rule);vertical-align:top}
+table.kv td:last-child{text-align:right;white-space:nowrap;padding-left:12px}
+table.kv tr.tot td{font-weight:600;border-bottom:0;border-top:2px solid var(--ink)}
+table.kv tr.sub td{color:var(--ink-2)}
+.alerts{display:grid;gap:8px}
+.alert{padding:9px 12px;font-size:14px;border-left:4px solid}
+.alert.w{background:var(--warn-soft);border-color:var(--warn)}
+.alert.o{background:var(--ok-soft);border-color:var(--ok)}
+
+/* Simulatore */
+section.sim{margin-top:44px;padding-top:22px;border-top:2px solid var(--ink)}
+.toolbar{display:flex;flex-wrap:wrap;gap:10px;margin:14px 0}
+button{font:inherit;font-size:14px;padding:8px 14px;border:1px solid var(--ink);background:var(--panel);color:var(--ink);cursor:pointer}
+button.pri{background:var(--ink);color:var(--paper)}
+.scroll{overflow-x:auto;border:1px solid var(--rule);background:var(--panel)}
+table.years{border-collapse:collapse;min-width:1200px;width:100%;font-size:13.5px}
+table.years th,table.years td{padding:6px 8px;border-bottom:1px solid var(--rule);text-align:right;white-space:nowrap}
+table.years th{font-weight:600;background:var(--field);position:sticky;top:0}
+table.years th:first-child,table.years td:first-child{text-align:left;font-weight:600}
+table.years td.out{background:color-mix(in srgb,var(--field) 55%,transparent)}
+table.years input[type=number]{width:74px;font:inherit;padding:4px 6px;border:1px solid var(--rule);background:var(--field);color:var(--ink);text-align:right}
+table.years select{font:inherit;padding:4px;border:1px solid var(--rule);background:var(--field);color:var(--ink)}
+table.years th.grp-in{border-bottom:2px solid var(--ink-2)}
+table.years th.grp-out{border-bottom:2px solid var(--agri)}
+.neg{color:var(--warn)}
+.chartbox{margin-top:18px;background:var(--panel);border:1px solid var(--rule);padding:14px}
+.legend{display:flex;gap:18px;font-size:13px;color:var(--ink-2);margin-bottom:6px;flex-wrap:wrap}
+.legend i{display:inline-block;width:12px;height:12px;margin-right:6px;vertical-align:-1px}
+svg text{font-family:"IBM Plex Sans",system-ui,sans-serif}
+
+section.notes{margin-top:44px;padding-top:22px;border-top:2px solid var(--ink);display:grid;gap:10px}
+section.notes ul{margin:0;padding-left:20px;max-width:80ch;color:var(--ink-2)}
+section.notes li{margin:4px 0}
+footer{margin-top:30px;font-size:13px;color:var(--ink-2)}
+.mini{display:none}
+
+/* Telefono */
+@media (max-width:700px){
+  .wrap{padding:16px 14px 40px}
+  header.top{gap:16px;padding-bottom:16px}
+  .lead{font-size:14px}
+  .month-figs{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+  .fig .v{font-size:clamp(20px,6.4vw,30px)}
+  .fig .l{font-size:12px;line-height:1.3}
+  .bar{height:26px}
+  .mini{display:flex;position:sticky;top:env(safe-area-inset-top,0px);z-index:20;flex-wrap:wrap;align-items:baseline;justify-content:space-between;gap:2px 12px;margin:0 -14px;padding:9px 14px;background:var(--panel);border-bottom:1px solid var(--rule);font-size:14px}
+  .mini b{font-family:"IBM Plex Sans Condensed",sans-serif;font-size:21px;font-weight:600;margin-left:4px}
+  .mini .st{font-weight:600;font-size:13px}
+  .mini .st.ok{color:var(--ok)} .mini .st.no{color:var(--warn)}
+  .mini a{color:var(--ink);font-weight:600;font-size:13px;padding:6px 0}
+  body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:30;background:var(--panel)}
+  #risultati{scroll-margin-top:calc(env(safe-area-inset-top,0px) + 64px)}
+  .calc{margin-top:16px;gap:16px}
+  .fields{grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:10px 12px;padding:2px 12px 14px}
+  .f label{font-size:12.5px;line-height:1.3}
+  .f input[type=number],.f select{font-size:16px;padding:9px 8px}
+  .f .u{font-size:12px;padding:0 6px}
+  .f.chk input{width:22px;height:22px}
+  details.grp>summary{padding:14px 12px;min-height:48px;align-items:center}
+  .hint{padding:0 12px 12px}
+  .card{padding:14px 12px}
+  table.kv{font-size:13.5px}
+  section.sim,section.notes{margin-top:32px}
+  .toolbar button{flex:1 1 100%;min-height:46px}
+  .scroll{overflow:visible;border:0;background:transparent}
+  table.years{min-width:0;display:block}
+  table.years thead{display:none}
+  table.years tbody{display:block}
+  table.years tr{display:grid;grid-template-columns:minmax(0,1fr);gap:4px;background:var(--panel);border:1px solid var(--rule);border-left:4px solid var(--agri);padding:10px 12px;margin-bottom:12px}
+  table.years td{display:flex;justify-content:space-between;align-items:center;gap:10px;border:0;padding:3px 0;white-space:normal;font-size:14px}
+  table.years td::before{content:attr(data-label);color:var(--ink-2);text-align:left}
+  table.years td:first-child{font-family:"IBM Plex Sans Condensed",sans-serif;font-size:20px;padding-bottom:4px}
+  table.years td:first-child::before{content:none}
+  table.years td.out{background:none;font-weight:600}
+  table.years td.out[data-o="F"]{border-top:1px solid var(--rule);margin-top:6px;padding-top:9px}
+  table.years td.out[data-o="m"]{font-size:17px}
+  table.years input[type=number]{width:110px!important;font-size:16px;padding:7px 8px}
+  table.years select{font-size:16px;padding:7px 6px}
+  table.years input[type=checkbox]{width:22px;height:22px}
+  .chartbox{padding:10px 8px}
+}
+@media (max-width:370px){.fields{grid-template-columns:minmax(0,1fr)}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header class="top">
+  <div>
+    <h1>Simulatore: impresa edile artigiana e azienda agricola</h1>
+    <p class="lead">Calcolatore del reddito netto di un anno tipo e simulatore anno per anno. Pensato per un artigiano edile che affianca alla propria ditta un’azienda agricola. Si confrontano due strade: azienda individuale con vivaio, funghi e glamping (strada B) oppure società agricola con un partner olivicolo e un frantoio (strada A). I valori iniziali sono di esempio: inserire i propri dati, che restano salvati solo in questo browser.</p>
+  </div>
+  <div class="month" aria-live="polite">
+    <div class="month-figs">
+      <div class="fig"><div class="v" id="mTot">–</div><div class="l">netto al mese, anno tipo</div></div>
+      <div class="fig ed"><div class="v" id="mEd">–</div><div class="l">dalla ditta edile</div></div>
+      <div class="fig ag"><div class="v" id="mAg">–</div><div class="l">dall’azienda agricola</div></div>
+    </div>
+    <div class="bar" id="bar" role="img" aria-label="Netto mensile rispetto all’obiettivo">
+      <div class="seg ed" id="segEd"></div><div class="seg ag" id="segAg"></div>
+      <div class="target" id="tgt"><span id="tgtLbl"></span></div>
+    </div>
+    <p class="status" id="status"></p>
+  </div>
+</header>
+
+<div class="mini" aria-live="polite"><span>Netto al mese <b id="miniTot">–</b></span><span class="st" id="miniSt"></span><a href="#risultati">Dettaglio dei conti</a></div>
+
+<div class="calc">
+  <div class="inputs" id="inputs"></div>
+  <aside class="results" id="risultati">
+    <div class="card"><h3>Ditta edile</h3><table class="kv" id="tEd"></table></div>
+    <div class="card"><h3>Azienda agricola</h3><table class="kv" id="tAg"></table></div>
+    <div class="card"><h3>Investimenti e premio di insediamento</h3><table class="kv" id="tInv"></table></div>
+    <div class="alerts" id="alerts"></div>
+  </aside>
+</div>
+
+<section class="sim">
+  <h2>Simulatore anno per anno</h2>
+  <p class="lead">Ogni riga usa i parametri del calcolatore, con le scelte dell’anno: regime fiscale, dipendente, quanto lavoro fattura il titolare e a che punto è l’agricola. “Avvio agricola” scala i ricavi di vivaio, funghi, orto e attività minori rispetto all’anno tipo; le tende sono il numero attivo in quell’anno.</p>
+  <div class="toolbar">
+    <button class="pri" id="presetB">Carica tempistica strada B</button>
+    <button id="presetA">Carica tempistica strada A</button>
+    <button id="varApp">Variante apprendista 2027–2030</button>
+    <button id="varBg">Variante Bonus Giovani 2027–2028</button>
+    <button id="reset">Ripristina tutti i valori iniziali</button>
+  </div>
+  <div class="scroll"><table class="years" id="years"></table></div>
+  <div class="chartbox">
+    <div class="legend"><span><i style="background:var(--edile)"></i>Netto mensile ditta edile</span><span><i style="background:var(--agri)"></i>Netto mensile azienda agricola</span><span><i style="border-top:2px dashed var(--ink);height:0;width:16px"></i>Obiettivo</span></div>
+    <svg id="chart" viewBox="0 0 900 320" width="100%" role="img" aria-label="Netto mensile per anno"></svg>
+  </div>
+</section>
+
+<section class="notes">
+  <h2>Ipotesi del modello</h2>
+  <ul>
+    <li>Fatturato edile = manodopera fatturata (titolare più dipendente) divisa per la quota non di materiale. Il materiale è rivenduto con il ricarico indicato.</li>
+    <li>Forfettario: coefficiente di redditività 86%, imposta sostitutiva 15%, contributi INPS artigiani su base minimale; costi del personale non deducibili. Limiti: 20.000 € l’anno di spese per il personale, soglia di 100.000 € prevista dal disegno di legge di bilancio 2027 (ancora in Parlamento), IVA dovuta sopra 85.000 €.</li>
+    <li>Semplificato: utile reale con IRPEF a scaglioni (23%, 33%, 43%) più addizionali; il furgone è deducibile solo nella quota indicata, per l’uso promiscuo.</li>
+    <li>Dipendente: part-time 25 ore settimanali (circa 108 ore al mese), full-time circa 173 ore al mese; il costo orario include contributi, Cassa Edile, INAIL, TFR e ratei. “Efficienza” è la quota di ore effettivamente fatturate.</li>
+    <li>Apprendistato professionalizzante (18-29 anni): costo orario ridotto per contributi agevolati e paga d’ingresso più bassa, per al massimo tre anni; poi il costo torna quello dell’operaio. Contratto scritto, piano formativo, tutor aziendale, formazione presso la scuola edile.</li>
+    <li>Bonus Giovani (under 35 mai assunti a tempo indeterminato): esonero dei contributi a carico del datore fino a 500 € al mese per 24 mesi, per le assunzioni a tempo indeterminato del 2026; la proroga al 2027 è nel disegno di legge di bilancio, non ancora approvato. In genere non si cumula con l’apprendistato. Nel modello l’esonero è proporzionale alle ore.</li>
+    <li>Agricola: margine al netto dei costi variabili; i costi fissi includono contributi agricoli, commercialista e certificazioni. Le imposte agricole sono stimate basse (tassazione catastale e regime agrituristico forfettario), da verificare.</li>
+    <li>Glamping come agricampeggio, con le regole dell’Umbria come esempio: fino a 6 piazzole con strutture removibili, solo con azienda agricola attiva e attività agricola prevalente.</li>
+    <li>Premio di primo insediamento: valore di esempio pari al premio del bando Umbria 2026 (70.000 €, programmazione 2023-2027). Importi e regole variano per regione e per periodo di programmazione.</li>
+    <li>Prevalenza agricola (IAP): confronto tra reddito agricolo e reddito edile. Il requisito sul tempo di lavoro non è calcolato.</li>
+    <li>Contributi INPS: non si considera la gestione della doppia iscrizione (artigiano e agricolo), da definire con il commercialista.</li>
+  </ul>
+  <footer>I valori inseriti restano salvati solo in questo browser e non vengono inviati da nessuna parte. Stime indicative aggiornate a novembre 2026: lo strumento non sostituisce la consulenza di commercialista, consulente del lavoro o tecnico agricolo.</footer>
+</section>
+</div>
+
+<script>
+(function(){
+"use strict";
+var KEY="simulatore-edile-agricola-v1";
+var NARROW=window.matchMedia("(max-width:700px)").matches;
+
+/* ---------- Schema dei parametri ---------- */
+var GROUPS=[
+ {id:"edile",c:"edile",title:"Ditta edile",fields:[
+  {k:"manAle",l:"Manodopera fatturata dal titolare",u:"€/anno",d:35000,s:1000},
+  {k:"quotaMat",l:"Peso del materiale sul fatturato",u:"%",d:30,s:1},
+  {k:"ricarico",l:"Ricarico sul materiale",u:"%",d:15,s:1},
+  {k:"tariffa",l:"Tariffa oraria manodopera",u:"€/h",d:30,s:1},
+  {k:"fissi",l:"Altre spese fisse (RC, commercialista, telefono)",u:"€/mese",d:300,s:10},
+  {k:"furgone",l:"Costo furgone",u:"€/mese",d:400,s:10},
+  {k:"vanDed",l:"Quota furgone deducibile in semplificato",u:"%",d:60,s:5},
+  {k:"affitto",l:"Affitto terreno",u:"€/mese",d:300,s:10},
+  {k:"quotaAffEd",l:"Quota affitto a carico dell’edile con agricola attiva",u:"%",d:40,s:5}
+ ]},
+ {id:"dip",c:"edile",title:"Dipendente edile",fields:[
+  {k:"dipTipo",l:"Contratto",t:"sel",o:[["no","Nessuno"],["pt","Part-time 25 h"],["ft","Full-time"]],d:"ft"},
+  {k:"inq",l:"Inquadramento",t:"sel",o:[["op","Operaio"],["app1","Apprendista, 1° anno"],["app2","Apprendista, 2° anno"],["app3","Apprendista, 3° anno"],["bg","Operaio con Bonus Giovani"]],d:"op"},
+  {k:"dipMesi",l:"Mesi lavorati nell’anno",u:"mesi",d:12,s:1},
+  {k:"dipCosto",l:"Costo azienda orario",u:"€/h",d:26,s:0.5},
+  {k:"dipEff",l:"Efficienza (ore fatturate su ore pagate)",u:"%",d:82,s:1},
+  {k:"app1",l:"Costo orario apprendista, 1° anno",u:"€/h",d:17,s:0.5},
+  {k:"app2",l:"Costo orario apprendista, 2° anno",u:"€/h",d:19,s:0.5},
+  {k:"app3",l:"Costo orario apprendista, 3° anno",u:"€/h",d:21,s:0.5},
+  {k:"bgEsonero",l:"Esonero Bonus Giovani (tempo pieno)",u:"€/mese",d:500,s:10}
+ ]},
+ {id:"fisco",c:"edile",title:"Fisco e contributi",fields:[
+  {k:"regime",l:"Regime ditta edile",t:"sel",o:[["forf","Forfettario"],["sempl","Semplificato"]],d:"sempl"},
+  {k:"inpsAliq",l:"Aliquota INPS artigiani",u:"%",d:24,s:0.1},
+  {k:"inpsMin",l:"Reddito minimale INPS",u:"€",d:18555,s:100},
+  {k:"addiz",l:"Addizionali IRPEF regionale e comunale",u:"%",d:2.5,s:0.1},
+  {k:"ridContr",l:"Riduzione del 50% sui contributi (primi tre anni)",t:"chk",d:false}
+ ]},
+ {id:"strada",c:"agri",title:"Azienda agricola: strada",fields:[
+  {k:"strada",l:"Strada",t:"sel",o:[["B","B · azienda individuale: vivaio, funghi, glamping"],["A","A · società agricola con frantoio"]],d:"B"},
+  {k:"agrFissi",l:"Costi fissi agricoli (contributi, commercialista, certificazioni)",u:"€/anno",d:6500,s:100},
+  {k:"agrTax",l:"Imposte stimate sul reddito agricolo",u:"%",d:5,s:1},
+  {k:"iapSoglia",l:"Soglia prevalenza agricola (IAP)",t:"sel",o:[["50","50% (zona ordinaria)"],["25","25% (zona svantaggiata)"]],d:"50"},
+  {k:"target",l:"Obiettivo netto mensile",u:"€/mese",d:2500,s:50}
+ ]},
+ {id:"B",c:"agri",title:"Strada B: vivaio, funghi, orto",only:"B",fields:[
+  {k:"vivRic",l:"Ricavi vivaio",u:"€/anno",d:15000,s:500},
+  {k:"vivMarg",l:"Margine vivaio",u:"%",d:50,s:1},
+  {k:"funKg",l:"Funghi venduti",u:"kg/anno",d:1500,s:100},
+  {k:"funPrezzo",l:"Prezzo medio funghi",u:"€/kg",d:8,s:0.5},
+  {k:"funMarg",l:"Margine funghi",u:"%",d:45,s:1},
+  {k:"orRic",l:"Ricavi orto e trasformati",u:"€/anno",d:3500,s:500},
+  {k:"orMarg",l:"Margine orto e trasformati",u:"%",d:50,s:1}
+ ]},
+ {id:"A",c:"agri",title:"Strada A: frantoio in società",only:"A",fields:[
+  {k:"quintali",l:"Olive lavorate (soci più conto terzi)",u:"q/anno",d:3000,s:100},
+  {k:"tariffaQ",l:"Valore della molitura",u:"€/q",d:18,s:0.5},
+  {k:"frCosti",l:"Costi di gestione del frantoio",u:"%",d:45,s:1},
+  {k:"frAmm",l:"Ammortamento impianto",u:"€/anno",d:12000,s:500},
+  {k:"quotaAle",l:"Quota del titolare nella società",u:"%",d:50,s:5},
+  {k:"altreMarg",l:"Margine altre attività (orto, vivaio, trasformati)",u:"€/anno",d:5000,s:500}
+ ]},
+ {id:"glamp",c:"glamp",title:"Glamping in agricampeggio",fields:[
+  {k:"tende",l:"Tende attive (massimo 6)",u:"n.",d:4,s:1},
+  {k:"notti",l:"Notti vendute per tenda",u:"notti/anno",d:80,s:5},
+  {k:"prezzoNotte",l:"Prezzo medio a notte",u:"€",d:100,s:5},
+  {k:"glMarg",l:"Margine glamping",u:"%",d:45,s:1},
+  {k:"glQuotaAle",l:"Quota del titolare sul glamping (strada A)",u:"%",d:50,s:5}
+ ]},
+ {id:"inv",c:"glamp",title:"Investimenti",fields:[
+  {k:"premio",l:"Premio di primo insediamento",u:"€",d:70000,s:1000},
+  {k:"costoTenda",l:"Costo per tenda allestita con pedana",u:"€",d:12000,s:500},
+  {k:"servizi",l:"Blocco servizi igienici",u:"€",d:30000,s:1000},
+  {k:"fungaia",l:"Costo per container fungaia",u:"€",d:15000,s:500},
+  {k:"serra",l:"Serra e irrigazione vivaio",u:"€",d:15000,s:500},
+  {k:"frantoioInv",l:"Frantoio, platea e locale (strada A)",u:"€",d:180000,s:5000}
+ ]}
+];
+
+var YEARS=[2026,2027,2028,2029,2030,2031,2032];
+var PRESETS={
+ B:[
+  {regime:"forf",dip:"no",mesi:0,eff:0,man:36000,agr:0,tende:0,fr:false,rid:true},
+  {regime:"forf",dip:"pt",mesi:6,eff:50,man:42000,agr:0,tende:0,fr:false,rid:true},
+  {regime:"sempl",dip:"ft",mesi:12,eff:72,man:40000,agr:20,tende:0,fr:false,rid:true},
+  {regime:"sempl",dip:"ft",mesi:12,eff:80,man:34000,agr:40,tende:2,fr:false,rid:false},
+  {regime:"sempl",dip:"ft",mesi:12,eff:82,man:30000,agr:60,tende:2,fr:false,rid:false},
+  {regime:"sempl",dip:"ft",mesi:12,eff:82,man:26000,agr:85,tende:5,fr:false,rid:false},
+  {regime:"sempl",dip:"ft",mesi:12,eff:82,man:24000,agr:100,tende:6,fr:false,rid:false}
+ ],
+ A:[
+  {regime:"forf",dip:"no",mesi:0,eff:0,man:36000,agr:0,tende:0,fr:false,rid:true},
+  {regime:"forf",dip:"pt",mesi:6,eff:50,man:42000,agr:0,tende:0,fr:false,rid:true},
+  {regime:"sempl",dip:"ft",mesi:12,eff:72,man:40000,agr:30,tende:0,fr:false,rid:true},
+  {regime:"sempl",dip:"ft",mesi:12,eff:80,man:36000,agr:50,tende:0,fr:false,rid:false},
+  {regime:"sempl",dip:"ft",mesi:12,eff:82,man:34000,agr:60,tende:0,fr:false,rid:false},
+  {regime:"sempl",dip:"ft",mesi:12,eff:82,man:28000,agr:80,tende:0,fr:true,rid:false},
+  {regime:"sempl",dip:"ft",mesi:12,eff:82,man:26000,agr:100,tende:3,fr:true,rid:false}
+ ]
+};
+
+function defaults(){var p={};GROUPS.forEach(function(g){g.fields.forEach(function(f){p[f.k]=f.d;});});return p;}
+function clone(o){return JSON.parse(JSON.stringify(o));}
+function norm(ys){ys.forEach(function(y){if(!y.inq)y.inq="op";});return ys;}
+
+var state={p:defaults(),years:norm(clone(PRESETS.B))};
+try{var saved=JSON.parse(localStorage.getItem(KEY)||"null");if(saved&&saved.p&&saved.years&&saved.years.length===YEARS.length){var d=defaults();for(var k in d){if(saved.p[k]!==undefined)d[k]=saved.p[k];}state.p=d;state.years=norm(saved.years);}}catch(e){}
+function save(){try{localStorage.setItem(KEY,JSON.stringify(state));}catch(e){}}
+
+/* ---------- Modello ---------- */
+function irpef(x){var t=0,b=[[0,28000,.23],[28000,50000,.33],[50000,1e12,.43]];b.forEach(function(r){if(x>r[0])t+=(Math.min(x,r[1])-r[0])*r[2];});return t;}
+
+function compute(p,y){
+  // y: override anno (opzionale)
+  var regime=y?y.regime:p.regime, tipo=y?y.dip:p.dipTipo, mesi=y?y.mesi:p.dipMesi, eff=(y?y.eff:p.dipEff)/100;
+  var man=y?y.man:p.manAle, s=y?y.agr/100:1, tende=Math.min(6,Math.max(0,y?y.tende:p.tende));
+  var rid=(y?y.rid:p.ridContr)?0.5:1, frOn=y?y.fr:true;
+  var qm=p.quotaMat/100, ric=p.ricarico/100, aliq=p.inpsAliq/100;
+  var agrOn=s>0||tende>0;
+
+  // Edile
+  var inq=(y?y.inq:p.inq)||"op";
+  var hMo=tipo==="pt"?108:(tipo==="ft"?173:0);
+  var hWork=hMo*(tipo==="no"?0:mesi);
+  var costH={op:p.dipCosto,bg:p.dipCosto,app1:p.app1,app2:p.app2,app3:p.app3}[inq]||p.dipCosto;
+  var dipCost=hWork*costH;
+  if(inq==="bg"&&hWork>0)dipCost=Math.max(0,dipCost-p.bgEsonero*(tipo==="no"?0:mesi)*hMo/173);
+  var dipBilled=hWork*eff*p.tariffa;
+  var F=(man+dipBilled)/(1-qm);
+  var mat=F*qm/(1+ric);
+  var affEd=p.affitto*12*(agrOn?p.quotaAffEd/100:1);
+  var cash=mat+p.fissi*12+p.furgone*12+affEd+dipCost;
+  var ed={F:F,mat:mat,dipCost:dipCost,dipBilled:dipBilled,affEd:affEd,fissi:p.fissi*12,furgone:p.furgone*12,regime:regime};
+  if(regime==="forf"){
+    var redd=0.86*F, inps=rid*aliq*Math.max(redd,p.inpsMin), tax=0.15*Math.max(redd-inps,0);
+    ed.inps=inps;ed.tax=tax;ed.net=F-cash-inps-tax;ed.reddito=redd-inps;
+  }else{
+    var pc=F-cash, taxable=pc+p.furgone*12*(1-p.vanDed/100);
+    var inps2=rid*aliq*Math.max(taxable,p.inpsMin), base=Math.max(taxable-inps2,0);
+    var tax2=irpef(base)+base*p.addiz/100;
+    ed.inps=inps2;ed.tax=tax2;ed.net=pc-inps2-tax2;ed.reddito=taxable-inps2;
+  }
+
+  // Agricola
+  var ag={rows:[]};
+  var glRic=tende*p.notti*p.prezzoNotte, glM=glRic*p.glMarg/100;
+  if(p.strada==="B"){
+    var viv=p.vivRic*s, fun=p.funKg*p.funPrezzo*s, ort=p.orRic*s;
+    ag.rows.push(["Vivaio",viv,viv*p.vivMarg/100]);
+    ag.rows.push(["Funghi",fun,fun*p.funMarg/100]);
+    ag.rows.push(["Orto e trasformati",ort,ort*p.orMarg/100]);
+    ag.rows.push(["Glamping ("+tende+" tende)",glRic,glM]);
+  }else{
+    var frR=frOn?p.quintali*p.tariffaQ*s:0;
+    var frU=frOn&&s>0?frR*(1-p.frCosti/100)-p.frAmm:0;
+    ag.rows.push(["Frantoio, quota "+p.quotaAle+"%",frR*p.quotaAle/100,frU*p.quotaAle/100]);
+    ag.rows.push(["Altre attività",0,p.altreMarg*s]);
+    ag.rows.push(["Glamping, quota "+p.glQuotaAle+"% ("+tende+" tende)",glRic*p.glQuotaAle/100,glM*p.glQuotaAle/100]);
+  }
+  ag.ricavi=ag.rows.reduce(function(a,r){return a+r[1];},0);
+  ag.margine=ag.rows.reduce(function(a,r){return a+r[2];},0);
+  ag.fissi=agrOn?p.agrFissi+p.affitto*12*(1-p.quotaAffEd/100):0;
+  ag.pre=ag.margine-ag.fissi;
+  ag.tax=ag.pre>0?ag.pre*p.agrTax/100:0;
+  ag.net=ag.pre-ag.tax;
+
+  var tot=ed.net+ag.net;
+  var share=(ag.pre>0)?ag.pre/(Math.max(ag.pre,0)+Math.max(ed.reddito,0)):0;
+  return {ed:ed,ag:ag,tot:tot,month:tot/12,share:share,tende:tende,s:s};
+}
+
+/* ---------- Formattazione ---------- */
+function eur(v){var n=Math.round(v);return (n<0?"−":"")+Math.abs(n).toLocaleString("it-IT")+" €";}
+function pct(v){return Math.round(v*100)+"%";}
+function esc(s){return String(s).replace(/[&<>"]/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;"}[c];});}
+
+/* ---------- Costruzione input ---------- */
+var inputsEl=document.getElementById("inputs");
+GROUPS.forEach(function(g){
+  var det=document.createElement("details");det.className="grp";det.open=!NARROW||g.id==="edile"||g.id==="strada";det.dataset.c=g.c;det.id="g-"+g.id;if(g.only)det.dataset.only=g.only;
+  var html='<summary>'+esc(g.title)+'</summary><div class="fields">';
+  g.fields.forEach(function(f){
+    var id="f-"+f.k;
+    if(f.t==="sel"){
+      html+='<div class="f"><label for="'+id+'">'+esc(f.l)+'</label><div class="in"><select id="'+id+'" data-k="'+f.k+'">'+f.o.map(function(o){return '<option value="'+o[0]+'">'+esc(o[1])+'</option>';}).join("")+'</select></div></div>';
+    }else if(f.t==="chk"){
+      html+='<div class="f chk"><input type="checkbox" id="'+id+'" data-k="'+f.k+'"><label for="'+id+'">'+esc(f.l)+'</label></div>';
+    }else{
+      html+='<div class="f"><label for="'+id+'">'+esc(f.l)+'</label><div class="in"><input type="number" inputmode="decimal" id="'+id+'" data-k="'+f.k+'" step="'+f.s+'"><span class="u">'+esc(f.u)+'</span></div></div>';
+    }
+  });
+  html+='</div>';
+  if(g.id==="glamp")html+='<p class="hint">Ad esempio in Umbria l’agricampeggio ammette fino a 6 piazzole con strutture removibili, solo con azienda agricola attiva e attività agricola prevalente.</p>';
+  if(g.id==="dip")html+='<p class="hint">Nel calcolatore il dipendente vale per tutto l’anno tipo; nel simulatore si sceglie anno per anno.</p>';
+  det.innerHTML=html;inputsEl.appendChild(det);
+});
+function syncInputs(){
+  inputsEl.querySelectorAll("[data-k]").forEach(function(el){var k=el.dataset.k;if(el.type==="checkbox")el.checked=!!state.p[k];else el.value=state.p[k];});
+}
+inputsEl.addEventListener("input",function(e){
+  var el=e.target,k=el.dataset.k;if(!k)return;
+  if(el.type==="checkbox")state.p[k]=el.checked;
+  else if(el.tagName==="SELECT")state.p[k]=el.value;
+  else{var v=parseFloat(el.value);if(isNaN(v))return;state.p[k]=v;}
+  renderAll();save();
+});
+
+/* ---------- Render calcolatore ---------- */
+function kv(rows){return rows.map(function(r){return '<tr class="'+(r[2]||"")+'"><td>'+esc(r[0])+'</td><td>'+r[1]+'</td></tr>';}).join("");}
+
+function renderCalc(){
+  var p=state.p, r=compute(p);
+  document.querySelectorAll("[data-only]").forEach(function(d){d.classList.toggle("hidden",d.dataset.only!==p.strada);});
+
+  document.getElementById("mTot").textContent=eur(r.month);
+  document.getElementById("mEd").textContent=eur(r.ed.net/12);
+  document.getElementById("mAg").textContent=eur(r.ag.net/12);
+  var max=Math.max(p.target*1.6,(Math.max(r.ed.net,0)+Math.max(r.ag.net,0))/12*1.05);
+  var we=Math.max(r.ed.net,0)/12/max*100, wa=Math.max(r.ag.net,0)/12/max*100;
+  var se=document.getElementById("segEd"), sa=document.getElementById("segAg");
+  se.style.left="0";se.style.width=we+"%";sa.style.left=we+"%";sa.style.width=wa+"%";
+  document.getElementById("tgt").style.left=(p.target/max*100)+"%";
+  document.getElementById("tgtLbl").textContent="obiettivo "+eur(p.target);
+  var st=document.getElementById("status"), gap=r.month-p.target;
+  st.className="status "+(gap>=0?"ok":"no");
+  st.textContent=gap>=0?"Obiettivo raggiunto con "+eur(gap)+" al mese di margine.":"Mancano "+eur(-gap)+" al mese per l’obiettivo.";
+  document.getElementById("miniTot").textContent=eur(r.month);
+  var ms=document.getElementById("miniSt");
+  ms.className="st "+(gap>=0?"ok":"no");
+  ms.textContent=gap>=0?"+"+eur(gap)+" sull’obiettivo":eur(gap)+" dall’obiettivo";
+
+  var e=r.ed;
+  document.getElementById("tEd").innerHTML=kv([
+    ["Fatturato",eur(e.F)],
+    ["di cui manodopera del dipendente",eur(e.dipBilled),"sub"],
+    ["Materiale (costo)","−"+eur(e.mat)],
+    ["Costo del dipendente","−"+eur(e.dipCost)],
+    ["Furgone, affitto e spese fisse","−"+eur(e.furgone+e.affEd+e.fissi)],
+    ["Contributi INPS","−"+eur(e.inps)],
+    [e.regime==="forf"?"Imposta sostitutiva 15%":"IRPEF e addizionali","−"+eur(e.tax)],
+    ["Netto annuo edile",eur(e.net),"tot"]
+  ]);
+  var ag=r.ag, rows=ag.rows.map(function(x){return [x[0]+" (ricavi "+eur(x[1])+")",eur(x[2])];});
+  rows.push(["Costi fissi agricoli e quota affitto","−"+eur(ag.fissi)]);
+  rows.push(["Imposte stimate","−"+eur(ag.tax)]);
+  rows.push(["Netto annuo agricolo",eur(ag.net),"tot"]);
+  document.getElementById("tAg").innerHTML=kv(rows);
+
+  var inv=[], tot=0;
+  if(p.strada==="B"){
+    var cont=Math.max(1,Math.ceil(p.funKg/1250));
+    inv.push(["Tende glamping ("+r.tende+")",r.tende*p.costoTenda]);
+    inv.push(["Blocco servizi igienici",r.tende>0?p.servizi:0]);
+    inv.push(["Fungaia ("+cont+" container)",cont*p.fungaia]);
+    inv.push(["Serra e irrigazione vivaio",p.serra]);
+  }else{
+    inv.push(["Frantoio, platea e locale",p.frantoioInv]);
+    inv.push(["Tende glamping ("+r.tende+")",r.tende*p.costoTenda]);
+    inv.push(["Blocco servizi igienici",r.tende>0?p.servizi:0]);
+  }
+  inv.forEach(function(x){tot+=x[1];});
+  var irows=inv.map(function(x){return [x[0],eur(x[1])];});
+  irows.push(["Totale investimenti",eur(tot),"tot"]);
+  irows.push(["Premio di primo insediamento","−"+eur(p.premio)]);
+  irows.push([tot>p.premio?"Da coprire con risparmi o altri bandi":"Premio non utilizzato",eur(Math.abs(tot-p.premio)),"tot"]);
+  document.getElementById("tInv").innerHTML=kv(irows);
+
+  var al=[];
+  if(e.regime==="forf"){
+    if(e.F>100000)al.push(["w","Fatturato edile oltre 100.000 €: fuori dal forfettario anche con la nuova soglia prevista per il 2027."]);
+    else if(e.F>85000)al.push(["w","Fatturato edile oltre 85.000 €: resta il forfettario (se la nuova soglia viene approvata) ma va applicata l’IVA."]);
+    if(e.dipCost>20000)al.push(["w","Spese per il personale oltre 20.000 € l’anno: incompatibili con il forfettario."]);
+  }
+  var soglia=parseFloat(p.iapSoglia)/100;
+  if(ag.pre>0){
+    al.push([r.share>=soglia?"o":"w","Reddito agricolo pari al "+pct(r.share)+" del reddito da lavoro: "+(r.share>=soglia?"sopra":"sotto")+" la soglia del "+p.iapSoglia+"% per la prevalenza agricola."]);
+  }
+  if(e.net<0)al.push(["w","La ditta edile chiude in perdita: il dipendente non si ripaga con questi parametri."]);
+  if(p.strada==="A"&&p.frAmm>0&&ag.rows[0][2]<0)al.push(["w","Il frantoio non copre gestione e ammortamento: servono più quintali o una tariffa più alta."]);
+  document.getElementById("alerts").innerHTML=al.map(function(a){return '<div class="alert '+a[0]+'">'+esc(a[1])+'</div>';}).join("");
+}
+
+/* ---------- Simulatore ---------- */
+var yt=document.getElementById("years");
+function buildYears(){
+  var h='<thead><tr><th class="grp-in">Anno</th><th class="grp-in">Regime</th><th class="grp-in">Dipendente</th><th class="grp-in">Inquadramento</th><th class="grp-in">Mesi</th><th class="grp-in">Efficienza %</th><th class="grp-in">Manodopera titolare €</th><th class="grp-in">Avvio agricola %</th><th class="grp-in">Tende</th><th class="grp-in">Frantoio</th><th class="grp-in">Contributi −50%</th>'+
+  '<th class="grp-out">Fatturato edile</th><th class="grp-out">Netto edile</th><th class="grp-out">Netto agricolo</th><th class="grp-out">Netto al mese</th><th class="grp-out">Quota agricola</th></tr></thead><tbody>';
+  YEARS.forEach(function(yr,i){
+    h+='<tr data-i="'+i+'"><td>'+yr+'</td>'+
+    '<td data-label="Regime"><select data-y="regime" aria-label="Regime '+yr+'"><option value="forf">Forfettario</option><option value="sempl">Semplificato</option></select></td>'+
+    '<td data-label="Dipendente"><select data-y="dip" aria-label="Dipendente '+yr+'"><option value="no">Nessuno</option><option value="pt">Part-time</option><option value="ft">Full-time</option></select></td>'+
+    '<td data-label="Inquadramento"><select data-y="inq" aria-label="Inquadramento '+yr+'"><option value="op">Operaio</option><option value="app1">Apprendista 1° anno</option><option value="app2">Apprendista 2° anno</option><option value="app3">Apprendista 3° anno</option><option value="bg">Bonus Giovani</option></select></td>'+
+    '<td data-label="Mesi del dipendente"><input type="number" data-y="mesi" min="0" max="12" step="1" aria-label="Mesi '+yr+'"></td>'+
+    '<td data-label="Efficienza %"><input type="number" data-y="eff" min="0" max="100" step="1" aria-label="Efficienza '+yr+'"></td>'+
+    '<td data-label="Manodopera titolare €"><input type="number" data-y="man" step="1000" style="width:96px" aria-label="Manodopera '+yr+'"></td>'+
+    '<td data-label="Avvio agricola %"><input type="number" data-y="agr" min="0" max="150" step="5" aria-label="Avvio agricola '+yr+'"></td>'+
+    '<td data-label="Tende glamping"><input type="number" data-y="tende" min="0" max="6" step="1" aria-label="Tende '+yr+'"></td>'+
+    '<td data-label="Frantoio attivo"><input type="checkbox" data-y="fr" aria-label="Frantoio attivo '+yr+'"></td>'+
+    '<td data-label="Contributi ridotti del 50%"><input type="checkbox" data-y="rid" aria-label="Riduzione contributi '+yr+'"></td>'+
+    '<td class="out" data-o="F" data-label="Fatturato edile"></td><td class="out" data-o="ed" data-label="Netto edile"></td><td class="out" data-o="ag" data-label="Netto agricolo"></td><td class="out" data-o="m" data-label="Netto al mese"></td><td class="out" data-o="sh" data-label="Quota agricola"></td></tr>';
+  });
+  yt.innerHTML=h+'</tbody>';
+}
+function syncYears(){
+  yt.querySelectorAll("tbody tr").forEach(function(tr){var y=state.years[+tr.dataset.i];
+    tr.querySelectorAll("[data-y]").forEach(function(el){var k=el.dataset.y;if(el.type==="checkbox")el.checked=!!y[k];else el.value=y[k];});});
+}
+yt.addEventListener("input",function(e){
+  var el=e.target,k=el.dataset.y;if(!k)return;var y=state.years[+el.closest("tr").dataset.i];
+  if(el.type==="checkbox")y[k]=el.checked;else if(el.tagName==="SELECT")y[k]=el.value;else{var v=parseFloat(el.value);if(isNaN(v))return;y[k]=v;}
+  renderSim();save();
+});
+function renderSim(){
+  var res=[];
+  yt.querySelectorAll("tbody tr").forEach(function(tr){
+    var i=+tr.dataset.i, r=compute(state.p,state.years[i]);res.push(r);
+    function set(o,t,neg){var c=tr.querySelector('[data-o="'+o+'"]');c.textContent=t;c.classList.toggle("neg",!!neg);}
+    set("F",eur(r.ed.F));set("ed",eur(r.ed.net),r.ed.net<0);set("ag",eur(r.ag.net),r.ag.net<0);
+    set("m",eur(r.month),r.month<state.p.target);set("sh",r.ag.pre>0?pct(r.share):"–");
+  });
+  drawChart(res);
+}
+function drawChart(res){
+  var svg=document.getElementById("chart"),cw=svg.parentNode.clientWidth||900;
+  var W=Math.max(300,Math.round(cw-(cw<600?16:28))),N=W<600,H=N?260:320,L=N?40:64,R=N?6:16,T=24,B=N?32:40;
+  svg.setAttribute("viewBox","0 0 "+W+" "+H);
+  function lab(v){return N?(Math.round(v/100)/10).toLocaleString("it-IT")+"k":eur(v);}
+  var tgt=state.p.target;
+  var maxV=Math.max(tgt*1.25,Math.max.apply(null,res.map(function(r){return (Math.max(r.ed.net,0)+Math.max(r.ag.net,0))/12;}))*1.12);
+  var minV=Math.min(0,Math.min.apply(null,res.map(function(r){return Math.min(r.ed.net,r.ag.net)/12;}))*1.1);
+  function y(v){return T+(maxV-v)/(maxV-minV)*(H-T-B);}
+  var bw=(W-L-R)/res.length, out="";
+  var step=maxV>4000?1000:500;
+  for(var g=Math.ceil(minV/step)*step;g<=maxV;g+=step){
+    out+='<line x1="'+L+'" x2="'+(W-R)+'" y1="'+y(g)+'" y2="'+y(g)+'" stroke="var(--rule)" stroke-width="1"/>';
+    out+='<text x="'+(L-8)+'" y="'+(y(g)+4)+'" font-size="12" text-anchor="end" fill="var(--ink-2)">'+(N?lab(g):g.toLocaleString("it-IT")+" €")+'</text>';
+  }
+  res.forEach(function(r,i){
+    var x=L+i*bw+bw*0.22, w=bw*0.56, e=r.ed.net/12, a=r.ag.net/12;
+    var e0=Math.max(e,0), a0=Math.max(a,0);
+    if(e0>0)out+='<rect x="'+x+'" y="'+y(e0)+'" width="'+w+'" height="'+(y(0)-y(e0))+'" fill="var(--edile)"><title>'+YEARS[i]+' edile '+eur(e)+'</title></rect>';
+    if(a0>0)out+='<rect x="'+x+'" y="'+y(e0+a0)+'" width="'+w+'" height="'+(y(e0)-y(e0+a0))+'" fill="var(--agri)"><title>'+YEARS[i]+' agricola '+eur(a)+'</title></rect>';
+    if(e<0)out+='<rect x="'+x+'" y="'+y(0)+'" width="'+(w/2)+'" height="'+(y(e)-y(0))+'" fill="var(--edile)" opacity=".55"/>';
+    if(a<0)out+='<rect x="'+(x+w/2)+'" y="'+y(0)+'" width="'+(w/2)+'" height="'+(y(a)-y(0))+'" fill="var(--agri)" opacity=".55"/>';
+    out+='<text x="'+(x+w/2)+'" y="'+(y(Math.max(e0+a0,0))-7)+'" font-size="12.5" font-weight="600" text-anchor="middle" fill="var(--ink)">'+lab(r.month)+'</text>';
+    out+='<text x="'+(x+w/2)+'" y="'+(H-14)+'" font-size="13" text-anchor="middle" fill="var(--ink-2)">'+YEARS[i]+'</text>';
+  });
+  out+='<line x1="'+L+'" x2="'+(W-R)+'" y1="'+y(0)+'" y2="'+y(0)+'" stroke="var(--ink-2)" stroke-width="1.2"/>';
+  out+='<line x1="'+L+'" x2="'+(W-R)+'" y1="'+y(tgt)+'" y2="'+y(tgt)+'" stroke="var(--ink)" stroke-width="1.6" stroke-dasharray="6 5"/>';
+  out+='<text x="'+(W-R)+'" y="'+(y(tgt)-6)+'" font-size="12" text-anchor="end" fill="var(--ink)">obiettivo '+eur(tgt)+'</text>';
+  svg.innerHTML=out;
+}
+
+function renderAll(){renderCalc();renderSim();}
+
+document.getElementById("presetB").addEventListener("click",function(){state.years=norm(clone(PRESETS.B));state.p.strada="B";syncInputs();syncYears();renderAll();save();});
+document.getElementById("presetA").addEventListener("click",function(){state.years=norm(clone(PRESETS.A));state.p.strada="A";syncInputs();syncYears();renderAll();save();});
+document.getElementById("reset").addEventListener("click",function(){state={p:defaults(),years:norm(clone(PRESETS.B))};syncInputs();syncYears();renderAll();save();});
+
+document.getElementById("varApp").addEventListener("click",function(){
+  var m={2027:["app1",40],2028:["app1",62],2029:["app2",75],2030:["app3",80]};
+  YEARS.forEach(function(yr,i){var y=state.years[i];if(y.dip==="no")return;if(m[yr]){y.inq=m[yr][0];y.eff=m[yr][1];}else{y.inq="op";}});
+  syncYears();renderSim();save();
+});
+document.getElementById("varBg").addEventListener("click",function(){
+  YEARS.forEach(function(yr,i){var y=state.years[i];if(y.dip==="no")return;y.inq=(yr===2027||yr===2028)?"bg":"op";});
+  syncYears();renderSim();save();
+});
+
+buildYears();syncInputs();syncYears();renderAll();
+var rt;window.addEventListener("resize",function(){clearTimeout(rt);rt=setTimeout(renderSim,150);});
+})();
+</script>
+</body>
+</html>
