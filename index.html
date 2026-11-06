@@ -167,15 +167,30 @@ footer{margin-top:30px;font-size:13px;color:var(--ink-2)}
   .chartbox{padding:10px 8px}
 }
 @media (max-width:370px){.fields{grid-template-columns:minmax(0,1fr)}}
+
+/* Technical workspace */
+:root{--paper:#edf1f5;--panel:#fff;--ink:#172b40;--ink-2:#526579;--rule:#cbd5df;--field:#f3f6f9;--edile:#996018;--agri:#26735e;--focus:#1767b3;color-scheme:light}
+body{font-size:14px}.wrap{max-width:1600px;padding:24px 32px 48px}
+.appbar{background:#142b40;color:#fff;padding:16px 32px;display:flex;justify-content:space-between;gap:20px;align-items:center}.brand{font-weight:700;letter-spacing:.12em}.appbar small{color:#b9cbd9}
+header.top{border:0;gap:18px}h1{font-size:30px}.top .lead{max-width:100ch;font-size:14px}.eyebrow{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-2);margin-bottom:8px}
+.month{background:var(--panel);border:1px solid var(--rule);border-radius:12px;padding:20px;gap:16px}.month-figs{display:grid;grid-template-columns:1.3fr 1fr 1fr;gap:16px}.fig{border-right:1px solid var(--rule);padding:0 16px}.fig:last-child{border:0}.fig .v{font-size:38px}.fig .l{margin-top:6px}.bar{height:10px;margin-top:18px;border:0;border-radius:4px}.status{font-size:13px}
+.workflow{display:flex;gap:8px;margin:22px 0 0;padding:6px;background:#dfe6ed;border-radius:10px}.workflow button{flex:1;text-align:left;border:0;background:transparent;padding:12px 16px;border-radius:7px;color:var(--ink-2)}.workflow button[aria-current="step"]{background:var(--panel);color:var(--ink);box-shadow:0 2px 5px #142b4012}.stepnum{font-size:12px;color:var(--focus);margin-right:10px}
+.guide{display:flex;justify-content:space-between;align-items:center;gap:16px;margin:24px 0 16px}.guide p{color:var(--ink-2);margin-top:5px}.guide h2{font-size:24px}.guide button{background:var(--ink);color:var(--panel);border:0;border-radius:6px;padding:12px 18px}
+.calc{margin-top:0;grid-template-columns:1fr}.inputs{grid-template-columns:repeat(2,minmax(0,1fr));align-items:start;gap:12px}.fields{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.grp,.card{border-radius:8px;overflow:hidden}.results{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}.alerts{grid-column:1/-1}.card{padding:18px}.card h3{padding-bottom:12px;border-bottom:1px solid var(--rule)}.f .in{border-radius:5px}.f input,.f select{min-height:38px}.sim{margin-top:0;border:0;padding-top:0}.toolbar{gap:8px}button{min-height:42px}.toolbar button{border-radius:6px}.scroll,.chartbox{border-radius:8px}.notes{font-size:13px}.mini{display:none!important}[hidden]{display:none!important}.notes summary{cursor:pointer;font-weight:600;font-size:16px;padding:16px 0}
+@media(min-width:1100px){.inputs{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media(max-width:760px){.wrap{padding:18px 14px 32px}.appbar{padding:14px}.appbar small{font-size:10px}h1{font-size:25px}.month{padding:16px 10px}.month-figs{gap:6px}.fig{padding:0 6px}.fig .v{font-size:25px}.fig .l{font-size:11px}.workflow{gap:2px}.workflow button{padding:10px 6px;text-align:center;font-size:12px}.stepnum{display:block;margin:0 0 4px}.inputs,.results{grid-template-columns:1fr}.guide{align-items:start}.guide h2{font-size:21px}.guide p{font-size:12px}.guide button{padding:10px;white-space:nowrap}.fields{grid-template-columns:repeat(2,minmax(0,1fr))}.f input[type=number],.f select{font-size:16px}}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--paper:#101c27;--panel:#192a39;--ink:#e1eaf2;--ink-2:#a6b8c8;--rule:#364b5e;--field:#203445;--edile:#e5b267;--agri:#70c6a8;--focus:#8cbff0;color-scheme:dark}.workflow{background:#203445}}
+
 </style>
 </head>
 <body>
+<div class="appbar"><span class="brand">CAMPO / CANTIERE</span><small>PIANIFICAZIONE ECONOMICA · 2026–2032</small></div>
 <div class="wrap">
 
 <header class="top">
   <div>
-    <h1>Simulatore: impresa edile artigiana e azienda agricola</h1>
-    <p class="lead">Calcolatore del reddito netto di un anno tipo e simulatore anno per anno. Pensato per un artigiano edile che affianca alla propria ditta un’azienda agricola. Si confrontano due strade: azienda individuale con vivaio, funghi e glamping (strada B) oppure società agricola con un partner olivicolo e un frantoio (strada A). I valori iniziali sono di esempio: inserire i propri dati, che restano salvati solo in questo browser.</p>
+    <p class="eyebrow">Il tuo piano, in numeri</p><h1>Due attività. Un quadro completo.</h1>
+    <p class="lead">Configura l’impresa edile e l’azienda agricola, verifica il reddito netto e costruisci il tuo piano fino al 2032. Parti dai valori di esempio: ogni modifica resta in questo browser.</p>
   </div>
   <div class="month" aria-live="polite">
     <div class="month-figs">
@@ -193,6 +208,12 @@ footer{margin-top:30px;font-size:13px;color:var(--ink-2)}
 
 <div class="mini" aria-live="polite"><span>Netto al mese <b id="miniTot">–</b></span><span class="st" id="miniSt"></span><a href="#risultati">Dettaglio dei conti</a></div>
 
+<nav class="workflow" aria-label="Percorso di simulazione">
+<button data-step="0" aria-current="step"><span class="stepnum">01 / CONFIGURA</span>Parametri</button>
+<button data-step="1"><span class="stepnum">02 / VERIFICA</span>Anno tipo</button>
+<button data-step="2"><span class="stepnum">03 / PIANIFICA</span>Scenari 2026–32</button>
+</nav>
+<div class="guide"><div><h2 id="stepTitle" tabindex="-1">Configura le tue attività</h2><p id="stepHelp">Apri i gruppi e adatta i valori alla tua impresa. Il riepilogo si aggiorna subito.</p></div><button id="nextStep">Verifica i risultati →</button></div>
 <div class="calc">
   <div class="inputs" id="inputs"></div>
   <aside class="results" id="risultati">
@@ -220,8 +241,7 @@ footer{margin-top:30px;font-size:13px;color:var(--ink-2)}
   </div>
 </section>
 
-<section class="notes">
-  <h2>Ipotesi del modello</h2>
+<details class="notes"><summary>Ipotesi del modello e note fiscali</summary>
   <ul>
     <li>Fatturato edile = manodopera fatturata (titolare più dipendente) divisa per la quota non di materiale. Il materiale è rivenduto con il ricarico indicato.</li>
     <li>Forfettario: coefficiente di redditività 86%, imposta sostitutiva 15%, contributi INPS artigiani su base minimale; costi del personale non deducibili. Limiti: 20.000 € l’anno di spese per il personale, soglia di 100.000 € prevista dal disegno di legge di bilancio 2027 (ancora in Parlamento), IVA dovuta sopra 85.000 €.</li>
@@ -236,7 +256,7 @@ footer{margin-top:30px;font-size:13px;color:var(--ink-2)}
     <li>Contributi INPS: non si considera la gestione della doppia iscrizione (artigiano e agricolo), da definire con il commercialista.</li>
   </ul>
   <footer>I valori inseriti restano salvati solo in questo browser e non vengono inviati da nessuna parte. Stime indicative aggiornate a novembre 2026: lo strumento non sostituisce la consulenza di commercialista, consulente del lavoro o tecnico agricolo.</footer>
-</section>
+</details>
 </div>
 
 <script>
@@ -609,6 +629,16 @@ document.getElementById("varBg").addEventListener("click",function(){
 
 buildYears();syncInputs();syncYears();renderAll();
 var rt;window.addEventListener("resize",function(){clearTimeout(rt);rt=setTimeout(renderSim,150);});
+})();
+</script>
+<script>
+(function(){
+const tabs=[...document.querySelectorAll('[data-step]')], inputs=document.querySelector('#inputs'), results=document.querySelector('#risultati'), sim=document.querySelector('.sim'), calc=document.querySelector('.calc');
+const titles=['Configura le tue attività','Leggi il bilancio dell’anno tipo','Costruisci il piano 2026–2032'];
+const help=['Apri i gruppi e adatta i valori alla tua impresa. Il riepilogo si aggiorna subito.','Confronta ricavi, costi e investimenti. Controlla gli avvisi prima di pianificare.','Scegli una tempistica di partenza, poi modifica le decisioni di ogni anno.'];
+let step=0;const next=document.querySelector('#nextStep');
+function show(n,focus){step=n;inputs.hidden=n!==0;results.hidden=n!==1;sim.hidden=n!==2;calc.hidden=n===2;tabs.forEach((t,i)=>{if(i===n)t.setAttribute('aria-current','step');else t.removeAttribute('aria-current')});document.querySelector('#stepTitle').textContent=titles[n];document.querySelector('#stepHelp').textContent=help[n];next.textContent=['Verifica i risultati →','Pianifica gli anni →','← Modifica parametri'][n];if(n===2)window.dispatchEvent(new Event('resize'));if(focus)document.querySelector('#stepTitle').focus();}
+tabs.forEach((t,i)=>t.addEventListener('click',()=>show(i,true)));next.addEventListener('click',()=>show((step+1)%3,true));show(0,false);
 })();
 </script>
 </body>
