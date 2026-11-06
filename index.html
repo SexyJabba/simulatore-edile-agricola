@@ -4,9 +4,8 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Simulatore · Impresa edile e azienda agricola</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Sans+Condensed:wght@500;600&display=swap" rel="stylesheet">
+<meta name="description" content="Pianifica il reddito della tua impresa edile e agricola: confronta costi, investimenti e scenari dal 2026 al 2032.">
+<script>try{const t=localStorage.getItem('campo-theme');if(t==='light'||t==='dark')document.documentElement.dataset.theme=t;}catch(e){}</script>
 <style>
 :root{
   --paper:#F5F6F4; --panel:#FFFFFF; --ink:#1E272B; --ink-2:#4B5A60; --rule:#D5DBD7; --field:#EEF1EE;
@@ -168,24 +167,27 @@ footer{margin-top:30px;font-size:13px;color:var(--ink-2)}
 }
 @media (max-width:370px){.fields{grid-template-columns:minmax(0,1fr)}}
 
-/* Technical workspace */
-:root{--paper:#edf1f5;--panel:#fff;--ink:#172b40;--ink-2:#526579;--rule:#cbd5df;--field:#f3f6f9;--edile:#996018;--agri:#26735e;--focus:#1767b3;color-scheme:light}
-body{font-size:14px}.wrap{max-width:1600px;padding:24px 32px 48px}
-.appbar{background:#142b40;color:#fff;padding:16px 32px;display:flex;justify-content:space-between;gap:20px;align-items:center}.brand{font-weight:700;letter-spacing:.12em}.appbar small{color:#b9cbd9}
-header.top{border:0;gap:18px}h1{font-size:30px}.top .lead{max-width:100ch;font-size:14px}.eyebrow{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-2);margin-bottom:8px}
-.month{background:var(--panel);border:1px solid var(--rule);border-radius:12px;padding:20px;gap:16px}.month-figs{display:grid;grid-template-columns:1.3fr 1fr 1fr;gap:16px}.fig{border-right:1px solid var(--rule);padding:0 16px}.fig:last-child{border:0}.fig .v{font-size:38px}.fig .l{margin-top:6px}.bar{height:10px;margin-top:18px;border:0;border-radius:4px}.status{font-size:13px}
-.workflow{display:flex;gap:8px;margin:22px 0 0;padding:6px;background:#dfe6ed;border-radius:10px}.workflow button{flex:1;text-align:left;border:0;background:transparent;padding:12px 16px;border-radius:7px;color:var(--ink-2)}.workflow button[aria-current="step"]{background:var(--panel);color:var(--ink);box-shadow:0 2px 5px #142b4012}.stepnum{font-size:12px;color:var(--focus);margin-right:10px}
-.guide{display:flex;justify-content:space-between;align-items:center;gap:16px;margin:24px 0 16px}.guide p{color:var(--ink-2);margin-top:5px}.guide h2{font-size:24px}.guide button{background:var(--ink);color:var(--panel);border:0;border-radius:6px;padding:12px 18px}
-.calc{margin-top:0;grid-template-columns:1fr}.inputs{grid-template-columns:repeat(2,minmax(0,1fr));align-items:start;gap:12px}.fields{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.grp,.card{border-radius:8px;overflow:hidden}.results{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}.alerts{grid-column:1/-1}.card{padding:18px}.card h3{padding-bottom:12px;border-bottom:1px solid var(--rule)}.f .in{border-radius:5px}.f input,.f select{min-height:38px}.sim{margin-top:0;border:0;padding-top:0}.toolbar{gap:8px}button{min-height:42px}.toolbar button{border-radius:6px}.scroll,.chartbox{border-radius:8px}.notes{font-size:13px}.mini{display:none!important}[hidden]{display:none!important}.notes summary{cursor:pointer;font-weight:600;font-size:16px;padding:16px 0}
-@media(min-width:1100px){.inputs{grid-template-columns:repeat(3,minmax(0,1fr))}}
-@media(max-width:760px){.wrap{padding:18px 14px 32px}.appbar{padding:14px}.appbar small{font-size:10px}h1{font-size:25px}.month{padding:16px 10px}.month-figs{gap:6px}.fig{padding:0 6px}.fig .v{font-size:25px}.fig .l{font-size:11px}.workflow{gap:2px}.workflow button{padding:10px 6px;text-align:center;font-size:12px}.stepnum{display:block;margin:0 0 4px}.inputs,.results{grid-template-columns:1fr}.guide{align-items:start}.guide h2{font-size:21px}.guide p{font-size:12px}.guide button{padding:10px;white-space:nowrap}.fields{grid-template-columns:repeat(2,minmax(0,1fr))}.f input[type=number],.f select{font-size:16px}}
-@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--paper:#101c27;--panel:#192a39;--ink:#e1eaf2;--ink-2:#a6b8c8;--rule:#364b5e;--field:#203445;--edile:#e5b267;--agri:#70c6a8;--focus:#8cbff0;color-scheme:dark}.workflow{background:#203445}}
-
+/* Dashboard and guided workflow */
+:root{--paper:#f1f4f7;--panel:#fff;--ink:#182e42;--ink-2:#526679;--rule:#d5dfe7;--field:#f5f7fa;--edile:#996018;--agri:#25735b;--focus:#1767b3;color-scheme:light}
+body{font-family:system-ui,-apple-system,"Segoe UI",sans-serif;font-size:14px}h1,h2,h3,.fig .v{font-family:inherit}
+.wrap{max-width:1480px;padding:30px 32px 48px}.appbar{background:#142b40;color:#fff;padding:16px 32px;display:flex;justify-content:space-between;gap:20px;align-items:center}.brand{font-weight:750;letter-spacing:.12em;display:flex;align-items:center;gap:12px}.brandmark{display:grid;place-items:center;width:32px;height:32px;background:#a6e9cc;color:#142b40;border-radius:8px;font-size:22px}.appbar small{color:#bbcedd;font-size:11px}.app-actions{display:flex;align-items:center;gap:18px}.theme-control{font-size:12px;color:#bbcedd;display:flex;align-items:center;gap:8px}.theme-control select{background:#233e55;color:#fff;border:1px solid #526a7e;padding:8px;border-radius:6px;font:inherit}
+header.top{border:0;gap:24px;padding-bottom:0}h1{font-size:clamp(25px,3vw,36px);letter-spacing:-.04em}.top .lead{max-width:83ch;font-size:14px;line-height:1.7}.eyebrow{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-2);margin-bottom:10px}.eyebrow::before{content:"";display:inline-block;width:7px;height:7px;background:var(--agri);border-radius:50%;margin-right:8px}
+.month{gap:16px;padding:0}.month-figs{display:grid;grid-template-columns:1.2fr 1fr 1fr;gap:14px}.fig{padding:22px 24px;border:1px solid var(--rule);border-radius:12px;background:var(--panel);box-shadow:0 3px 12px #142b4005;display:flex;flex-direction:column;gap:12px}.fig:first-child{background:#18394a;border-color:#18394a;color:#fff}.fig:first-child .l{color:#c4dbe5}.fig .v{font-size:clamp(26px,3.2vw,42px);font-weight:650;letter-spacing:-.04em}.fig .l{order:-1;font-size:12px}.fig.ed{border-top:3px solid var(--edile)}.fig.ag{border-top:3px solid var(--agri)}.bar{height:8px;margin-top:20px;border:0;border-radius:4px}.status{font-size:12px;font-weight:500}
+.workflow{display:flex;gap:4px;margin:26px 0 0;padding:5px;background:var(--panel);border:1px solid var(--rule);border-radius:10px;position:sticky;top:8px;z-index:25;box-shadow:0 4px 14px #142b4008}.workflow button{flex:1;text-align:left;border:0;background:transparent;padding:12px 16px;border-radius:6px;color:var(--ink-2);font-weight:600}.workflow button[aria-current="step"]{background:var(--ink);color:var(--panel)}.stepnum{display:block;font-size:10px;letter-spacing:.09em;font-weight:500;margin-bottom:4px;opacity:.75}.workflow button:hover:not([aria-current]){background:var(--field)}
+.guide{display:flex;justify-content:space-between;align-items:center;gap:16px;margin:26px 0 18px}.guide p{color:var(--ink-2);margin-top:6px}.guide h2{font-size:23px;letter-spacing:-.025em}.guide button{background:var(--ink);color:var(--panel);border:0;border-radius:6px;padding:12px 18px}.guide h2:focus{outline:none}.guide h2{scroll-margin-top:120px}
+.parameter-tools{display:flex;gap:12px;align-items:center;margin-bottom:16px;flex-wrap:wrap}.searchbox{display:flex;align-items:center;gap:10px;flex:1;min-width:220px;background:var(--panel);border:1px solid var(--rule);border-radius:7px;padding:0 12px}.searchbox input{width:100%;min-width:0;padding:12px 0;border:0;background:transparent;color:var(--ink);font:inherit}.searchbox label{font-size:12px;color:var(--ink-2)}.parameter-tools button,.export-button{border-color:var(--rule);border-radius:6px}.empty-search{padding:24px;border:1px dashed var(--rule);border-radius:8px;color:var(--ink-2)}
+.calc{margin-top:0;grid-template-columns:1fr}.inputs{grid-template-columns:repeat(2,minmax(0,1fr));align-items:start;gap:14px}.fields{grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}.grp,.card{border-radius:9px;overflow:hidden}details.grp>summary{padding:16px;background:var(--panel)}.results{position:static;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px;align-items:start}.alerts{grid-column:1/-1}.card{padding:18px}.card h3{padding-bottom:12px;border-bottom:1px solid var(--rule)}.f .in{border-radius:5px}.f input,.f select{min-height:40px}.f label{line-height:1.4}.fields{padding-top:10px}.f select{text-overflow:ellipsis}.sim,section.sim{margin-top:0;border:0;padding-top:0}.sim>h2{font-size:18px}.sim>.lead{font-size:13px;max-width:110ch}.toolbar{gap:8px}button{min-height:44px}button:hover{filter:brightness(.96)}.toolbar button{border-radius:6px;border-color:var(--rule)}#reset{color:var(--warn);margin-left:auto}.scroll,.chartbox{border-radius:9px}.chartbox{margin-bottom:20px}.chart-heading{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:18px}.chart-heading h3{font-size:15px}.scroll:focus-visible{outline:2px solid var(--focus)}.table-help{font-size:12px;color:var(--ink-2);margin:12px 0}.notes{font-size:13px;border-top:1px solid var(--rule);margin-top:30px;color:var(--ink-2)}.notes summary{cursor:pointer;font-weight:600;font-size:14px;padding:18px 0;color:var(--ink)}.notes li{margin:8px 0;max-width:100ch}.mini{display:none!important}[hidden]{display:none!important}.year-nav{display:none}.local-note{font-size:11px;color:var(--ink-2);margin-top:18px}.export-button{font-size:12px}
+:root[data-theme="dark"]{--paper:#101c27;--panel:#192a39;--ink:#e1eaf2;--ink-2:#a6b8c8;--rule:#364b5e;--field:#203445;--edile:#e5b267;--agri:#70c6a8;--focus:#8cbff0;color-scheme:dark}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--paper:#101c27;--panel:#192a39;--ink:#e1eaf2;--ink-2:#a6b8c8;--rule:#364b5e;--field:#203445;--edile:#e5b267;--agri:#70c6a8;--focus:#8cbff0;color-scheme:dark}}
+@media(max-width:1050px){.results{grid-template-columns:1fr}.appbar small{display:none}}
+@media(max-width:700px){.wrap{padding:22px 14px 32px}.appbar{padding:12px 14px;gap:8px}.brand{font-size:11px;gap:8px}.brandmark{width:26px;height:26px}.theme-control{font-size:11px;gap:4px}.theme-control>span{display:none}.month-figs{grid-template-columns:1fr 1fr;gap:10px}.fig{padding:16px;gap:8px}.fig:first-child{grid-column:1/-1;flex-direction:row;justify-content:space-between;align-items:center}.fig:first-child .v{font-size:34px}.fig .v{font-size:25px}.fig .l{font-size:11px}.workflow{top:4px;margin-top:20px}.workflow button{padding:10px 5px;text-align:center;font-size:12px}.stepnum{font-size:9px}.guide{align-items:stretch;flex-direction:column;margin-top:22px}.guide h2{font-size:22px}.guide p{font-size:13px}.guide button{align-self:flex-start}.inputs,.results{grid-template-columns:1fr}.f input[type=number],.f select{font-size:16px}.toolbar{display:grid;grid-template-columns:1fr 1fr}.toolbar button{font-size:12px;padding:10px 8px}#reset{grid-column:1/-1;margin:0}.year-nav{display:flex;gap:6px;overflow:auto;padding:8px 0 12px}.year-nav button{flex:1;padding:8px;min-width:55px;border:1px solid var(--rule);border-radius:6px;font-size:12px}.year-nav button[aria-pressed="true"]{background:var(--ink);color:var(--panel)}.years tr:not(.selected-year){display:none}.table-help{display:none}.chart-heading{align-items:start}.chart-heading h3{max-width:150px;line-height:1.4}.parameter-tools{gap:8px}.parameter-tools button{flex:1;font-size:12px}.searchbox{flex-basis:100%}.chartbox{padding:14px 10px}#chart{min-height:155px}.local-note{line-height:1.5}}
+@media(max-width:700px){table.years select{min-width:0;max-width:55%}.f:has(select){grid-column:1/-1}.theme-control select{min-height:44px}}
+@media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;transition:none!important}}
 </style>
 </head>
 <body>
-<div class="appbar"><span class="brand">CAMPO / CANTIERE</span><small>PIANIFICAZIONE ECONOMICA · 2026–2032</small></div>
-<div class="wrap">
+<div class="appbar"><span class="brand"><span class="brandmark" aria-hidden="true">⌑</span>CAMPO / CANTIERE</span><div class="app-actions"><small>PIANIFICAZIONE ECONOMICA · 2026–2032</small><label class="theme-control"><span>Tema</span><select id="theme" aria-label="Tema dell’interfaccia"><option value="auto">Sistema</option><option value="light">Chiaro</option><option value="dark">Scuro</option></select></label></div></div>
+<main class="wrap">
 
 <header class="top">
   <div>
@@ -214,6 +216,8 @@ header.top{border:0;gap:18px}h1{font-size:30px}.top .lead{max-width:100ch;font-s
 <button data-step="2"><span class="stepnum">03 / PIANIFICA</span>Scenari 2026–32</button>
 </nav>
 <div class="guide"><div><h2 id="stepTitle" tabindex="-1">Configura le tue attività</h2><p id="stepHelp">Apri i gruppi e adatta i valori alla tua impresa. Il riepilogo si aggiorna subito.</p></div><button id="nextStep">Verifica i risultati →</button></div>
+<div id="parameterTools" class="parameter-tools"><div class="searchbox"><label for="parameterSearch">Cerca</label><input id="parameterSearch" type="search" placeholder="Es. contributi, glamping, dipendente" autocomplete="off"></div><button id="expandGroups">Espandi gruppi</button><button id="collapseGroups">Comprimi gruppi</button></div>
+<p id="emptySearch" class="empty-search" role="status" hidden>Nessun parametro trovato. Prova un termine diverso.</p>
 <div class="calc">
   <div class="inputs" id="inputs"></div>
   <aside class="results" id="risultati">
@@ -228,19 +232,20 @@ header.top{border:0;gap:18px}h1{font-size:30px}.top .lead{max-width:100ch;font-s
   <h2>Simulatore anno per anno</h2>
   <p class="lead">Ogni riga usa i parametri del calcolatore, con le scelte dell’anno: regime fiscale, dipendente, quanto lavoro fattura il titolare e a che punto è l’agricola. “Avvio agricola” scala i ricavi di vivaio, funghi, orto e attività minori rispetto all’anno tipo; le tende sono il numero attivo in quell’anno.</p>
   <div class="toolbar">
-    <button class="pri" id="presetB">Carica tempistica strada B</button>
-    <button id="presetA">Carica tempistica strada A</button>
+    <button class="pri" id="presetB">B · Vivaio e glamping</button>
+    <button id="presetA">A · Società e frantoio</button>
     <button id="varApp">Variante apprendista 2027–2030</button>
     <button id="varBg">Variante Bonus Giovani 2027–2028</button>
     <button id="reset">Ripristina tutti i valori iniziali</button>
   </div>
-  <div class="scroll"><table class="years" id="years"></table></div>
-  <div class="chartbox">
+  <p class="table-help">Modifica le celle per aggiornare il piano. Scorri la tabella orizzontalmente per leggere tutti i risultati.</p><div class="year-nav" id="yearNav" role="group" aria-label="Anno da modificare"></div><div class="scroll" tabindex="0" role="region" aria-label="Decisioni e risultati dal 2026 al 2032"><table class="years" id="years"></table></div>
+  <div class="chartbox"><div class="chart-heading"><h3>Come evolve il reddito mensile</h3><button id="exportCsv" class="export-button">↓ Esporta risultati CSV</button></div>
     <div class="legend"><span><i style="background:var(--edile)"></i>Netto mensile ditta edile</span><span><i style="background:var(--agri)"></i>Netto mensile azienda agricola</span><span><i style="border-top:2px dashed var(--ink);height:0;width:16px"></i>Obiettivo</span></div>
     <svg id="chart" viewBox="0 0 900 320" width="100%" role="img" aria-label="Netto mensile per anno"></svg>
   </div>
 </section>
 
+<p class="local-note">Dati conservati in questo browser · Nessun account necessario · Valori iniziali di esempio</p>
 <details class="notes"><summary>Ipotesi del modello e note fiscali</summary>
   <ul>
     <li>Fatturato edile = manodopera fatturata (titolare più dipendente) divisa per la quota non di materiale. Il materiale è rivenduto con il ricarico indicato.</li>
@@ -257,7 +262,7 @@ header.top{border:0;gap:18px}h1{font-size:30px}.top .lead{max-width:100ch;font-s
   </ul>
   <footer>I valori inseriti restano salvati solo in questo browser e non vengono inviati da nessuna parte. Stime indicative aggiornate a novembre 2026: lo strumento non sostituisce la consulenza di commercialista, consulente del lavoro o tecnico agricolo.</footer>
 </details>
-</div>
+</main>
 
 <script>
 (function(){
@@ -615,7 +620,7 @@ function renderAll(){renderCalc();renderSim();}
 
 document.getElementById("presetB").addEventListener("click",function(){state.years=norm(clone(PRESETS.B));state.p.strada="B";syncInputs();syncYears();renderAll();save();});
 document.getElementById("presetA").addEventListener("click",function(){state.years=norm(clone(PRESETS.A));state.p.strada="A";syncInputs();syncYears();renderAll();save();});
-document.getElementById("reset").addEventListener("click",function(){state={p:defaults(),years:norm(clone(PRESETS.B))};syncInputs();syncYears();renderAll();save();});
+document.getElementById("reset").addEventListener("click",function(){if(!window.confirm("Ripristinare tutti i valori iniziali? I parametri e le scelte annuali attuali saranno sostituiti."))return;state={p:defaults(),years:norm(clone(PRESETS.B))};syncInputs();syncYears();renderAll();save();});
 
 document.getElementById("varApp").addEventListener("click",function(){
   var m={2027:["app1",40],2028:["app1",62],2029:["app2",75],2030:["app3",80]};
@@ -636,9 +641,34 @@ var rt;window.addEventListener("resize",function(){clearTimeout(rt);rt=setTimeou
 const tabs=[...document.querySelectorAll('[data-step]')], inputs=document.querySelector('#inputs'), results=document.querySelector('#risultati'), sim=document.querySelector('.sim'), calc=document.querySelector('.calc');
 const titles=['Configura le tue attività','Leggi il bilancio dell’anno tipo','Costruisci il piano 2026–2032'];
 const help=['Apri i gruppi e adatta i valori alla tua impresa. Il riepilogo si aggiorna subito.','Confronta ricavi, costi e investimenti. Controlla gli avvisi prima di pianificare.','Scegli una tempistica di partenza, poi modifica le decisioni di ogni anno.'];
-let step=0;const next=document.querySelector('#nextStep');
-function show(n,focus){step=n;inputs.hidden=n!==0;results.hidden=n!==1;sim.hidden=n!==2;calc.hidden=n===2;tabs.forEach((t,i)=>{if(i===n)t.setAttribute('aria-current','step');else t.removeAttribute('aria-current')});document.querySelector('#stepTitle').textContent=titles[n];document.querySelector('#stepHelp').textContent=help[n];next.textContent=['Verifica i risultati →','Pianifica gli anni →','← Modifica parametri'][n];if(n===2)window.dispatchEvent(new Event('resize'));if(focus)document.querySelector('#stepTitle').focus();}
+let noMatches=false;let step=0;const next=document.querySelector('#nextStep');
+function show(n,focus){step=n;document.querySelector('#parameterTools').hidden=n!==0;document.querySelector('#emptySearch').hidden=n!==0||!noMatches;inputs.hidden=n!==0;results.hidden=n!==1;sim.hidden=n!==2;calc.hidden=n===2;tabs.forEach((t,i)=>{if(i===n)t.setAttribute('aria-current','step');else t.removeAttribute('aria-current')});document.querySelector('#stepTitle').textContent=titles[n];document.querySelector('#stepHelp').textContent=help[n];next.textContent=['Verifica i risultati →','Pianifica gli anni →','← Modifica parametri'][n];if(n===2)window.dispatchEvent(new Event('resize'));if(focus)document.querySelector('#stepTitle').focus();}
 tabs.forEach((t,i)=>t.addEventListener('click',()=>show(i,true)));next.addEventListener('click',()=>show((step+1)%3,true));show(0,false);
+const groups=[...inputs.querySelectorAll('.grp')], search=document.querySelector('#parameterSearch');
+let previousOpen=null;
+function filterGroups(){
+ const query=search.value.trim().toLocaleLowerCase('it');
+ if(query&&!previousOpen)previousOpen=groups.map(g=>g.open);
+ groups.forEach((g,i)=>{g.hidden=!!query&&!g.textContent.toLocaleLowerCase('it').includes(query);if(query&&!g.hidden)g.open=true;else if(!query&&previousOpen)g.open=previousOpen[i];});
+ if(!query)previousOpen=null;
+ noMatches=!groups.some(g=>!g.hidden&&!g.classList.contains('hidden'));
+ document.querySelector('#emptySearch').hidden=step!==0||!noMatches;
+}
+search.addEventListener('input',filterGroups);
+inputs.addEventListener('input',()=>{if(search.value)filterGroups()});
+document.querySelector('#expandGroups').addEventListener('click',()=>groups.forEach(g=>g.open=true));
+document.querySelector('#collapseGroups').addEventListener('click',()=>groups.forEach(g=>g.open=false));
+const theme=document.querySelector('#theme');theme.value=document.documentElement.dataset.theme||'auto';
+theme.addEventListener('change',()=>{if(theme.value==='auto')delete document.documentElement.dataset.theme;else document.documentElement.dataset.theme=theme.value;try{localStorage.setItem('campo-theme',theme.value)}catch(e){}window.dispatchEvent(new Event('resize'));});
+window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change',()=>window.dispatchEvent(new Event('resize')));
+const rows=[...document.querySelectorAll('#years tbody tr')], yearNav=document.querySelector('#yearNav');
+rows.forEach((row,i)=>{const button=document.createElement('button');button.textContent=row.cells[0].textContent;button.setAttribute('aria-pressed',String(i===0));row.classList.toggle('selected-year',i===0);button.addEventListener('click',()=>{rows.forEach((r,j)=>r.classList.toggle('selected-year',i===j));[...yearNav.children].forEach((b,j)=>b.setAttribute('aria-pressed',String(i===j)));});yearNav.appendChild(button)});
+const chartbox=document.querySelector('.chartbox');sim.insertBefore(chartbox,document.querySelector('.table-help'));
+document.querySelector('#exportCsv').addEventListener('click',()=>{
+ const data=[['Anno','Fatturato edile','Netto edile','Netto agricolo','Netto al mese','Quota agricola'],...rows.map(r=>[r.cells[0].textContent,...[...r.querySelectorAll('[data-o]')].map(c=>c.textContent)])];
+ const csv='\uFEFF'+data.map(row=>row.map(v=>'"'+v.replaceAll('"','""')+'"').join(';')).join('\r\n');
+ const url=URL.createObjectURL(new Blob([csv],{type:'text/csv;charset=utf-8'}));const a=document.createElement('a');a.href=url;a.download='campo-cantiere-risultati.csv';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);
+});
 })();
 </script>
 </body>
